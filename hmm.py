@@ -27,25 +27,25 @@ class HMM(object):
         self.m = len(self.words)
         self.n = len(self.tags)
     def train(self, sentences, file, alpha=0.01):
-        trans_matrix = np.zeros((self.n + 1, self.n + 1))
-        emit_matrix = np.zeros((self.m + 1, self.n))
+        trans = np.zeros((self.n + 1, self.n + 1))
+        emit = np.zeros((self.m + 1, self.n))
         for wordseq, tagseq in sentences:
             prev = -1
             for word, tag in zip(wordseq, tagseq):
                 ti, wi = self.tdict[tag], self.wdict[word]
-                trans_matrix[ti, prev] += 1
-                emit_matrix[wi, ti] += 1
+                trans[ti, prev] += 1
+                emit[wi, ti] += 1
                 prev = ti
-            trans_matrix[self.n, prev] += 1
-        trans_matrix = self.smooth(trans_matrix, alpha)
+            trans[self.n, prev] += 1
+        trans = self.smooth(trans, alpha)
         # Transition probability
-        self.A = np.log(trans_matrix[:-1, :-1])
+        self.A = np.log(trans[:-1, :-1])
         # Initial transition probability
-        self.BOS = np.log(trans_matrix[:-1, -1])
+        self.BOS = np.log(trans[:-1, -1])
         # End transition probability
-        self.EOS = np.log(trans_matrix[-1, :-1])
+        self.EOS = np.log(trans[-1, :-1])
         # Emission probability
-        self.B = np.log(self.smooth(emit_matrix, alpha))
+        self.B = np.log(self.smooth(emit, alpha))
         # Save model
         if file is not None:
             self.dump(file)
