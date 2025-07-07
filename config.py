@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+
+
 class Config(object):
+
     def __init__(self, bigdata=False):
         if bigdata:
             self.alpha = 0.01  # 平滑参数
@@ -10,4 +13,3 @@ class Config(object):
             self.alpha = 0.3  # 平滑参数
             self.ftrain = 'data/train.conll'
             self.fdev = 'data/dev.conll'
-        self.hmmpkl = 'hmm.pkl'
